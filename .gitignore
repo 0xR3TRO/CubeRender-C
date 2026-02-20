@@ -1,24 +1,22 @@
-# Pliki wykonywalne
+# ── Compiled binaries ────────────────────────────────────────
 cube
 cube.exe
 *.out
-
-# Pliki obiektowe
 *.o
 
-# macOS
+# ── macOS ─────────────────────────────────────────────────────
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 
-# Windows
+# ── Windows ───────────────────────────────────────────────────
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 
-# Edytory
+# ── Editors ───────────────────────────────────────────────────
 .vscode/settings.json
 *.swp
 *~
