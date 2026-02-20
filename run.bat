@@ -50,6 +50,10 @@ if not exist %BINARY% (
     echo.
 )
 
+:: Resize the console window to fit the cube (162 cols x 48 rows)
+:: WIDTH=160 + HEIGHT=44 + banner/margins = min 162 x 48
+mode con: cols=162 lines=48
+
 echo Starting CubeRender...   Quit: Ctrl+C
 echo.
 %BINARY%

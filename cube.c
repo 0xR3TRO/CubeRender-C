@@ -187,6 +187,31 @@ static void flush_frame(void) {
     fflush(stdout);
 }
 
+/* ── Resize terminal window to fit the render buffer ───────── */
+/*
+ *  Required minimum:  WIDTH=160 cols  +  HEIGHT=44 rows  +  1 banner
+ *  We request:         162 cols  x  48 rows  (safe margin on all sides)
+ */
+#define TERM_COLS 162
+#define TERM_ROWS  48
+
+static void resize_terminal(void) {
+#ifdef _WIN32
+    HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+    /* Screen buffer must be >= window size; make it tall to avoid scrollbar */
+    COORD     buf  = { TERM_COLS, 9999 };
+    SMALL_RECT win  = { 0, 0, TERM_COLS - 1, TERM_ROWS - 1 };
+    SetConsoleScreenBufferSize(hOut, buf);
+    SetConsoleWindowInfo(hOut, TRUE, &win);
+#else
+    /* xterm / VT100 sequence: CSI 8 ; <rows> ; <cols> t
+     * Supported by: Terminal.app, iTerm2, GNOME Terminal, xterm, etc. */
+    printf("\033[8;%d;%dt", TERM_ROWS, TERM_COLS);
+    fflush(stdout);
+    SLEEP_MS(80); /* give the terminal time to process the resize */
+#endif
+}
+
 /* ── Parse CLI arguments ────────────────────────────────────── */
 static int parse_args(int argc, char **argv) {
     for (int i = 1; i < argc; i++) {
@@ -218,6 +243,7 @@ int main(int argc, char **argv) {
     if (!parse_args(argc, argv)) return 0;
 
     enable_ansi();
+    resize_terminal();   /* set window to exactly WIDTH x HEIGHT + margins */
     signal(SIGINT, on_sigint);
 
     const float base_speed = 0.012f;

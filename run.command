@@ -47,6 +47,12 @@ if [ ! -f "$BINARY" ] || [ "$SOURCE" -nt "$BINARY" ]; then
     echo ""
 fi
 
+# Resize the Terminal window to fit the cube
+# WIDTH=160 cols + HEIGHT=44 rows + banner/margins → 162 x 48
+# This uses the xterm CSI 8;<rows>;<cols>t window-resize sequence.
+printf '\033[8;48;162t'
+sleep 0.1
+
 echo "Starting CubeRender...  Quit: Ctrl+C"
 echo ""
 
